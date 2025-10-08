@@ -15,20 +15,25 @@
 
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.FacilEmprega.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- THIS IS THE LINE YOU MUST ADD -->
-        <activity android:name=".RegisterUserActivity" />
+        <activity
+            android:name=".RegisterUserActivity"
+            android:theme="@style/Theme.FacilEmprega.NoActionBar" />
+
+        <activity
+            android:name=".RegisterCompanyActivity"
+            android:theme="@style/Theme.FacilEmprega.NoActionBar" />
 
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <!-- Your existing MainActivity setup -->
         </activity>
 
     </application>

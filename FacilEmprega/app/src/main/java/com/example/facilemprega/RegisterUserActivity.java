@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,36 +19,67 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText;
+    private EditText nameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
     private Button registerButton;
+    private TextView registerCompanyLink, loginLink;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // You need to create a layout file named 'activity_register_user.xml'
-        // for this screen.
         setContentView(R.layout.activity_register_user);
 
         mAuth = FirebaseAuth.getInstance();
+
+        // Referências dos componentes da UI
+        nameEditText = findViewById(R.id.edit_text_name_user);
         emailEditText = findViewById(R.id.edit_text_email_register);
         passwordEditText = findViewById(R.id.edit_text_password_register);
+        confirmPasswordEditText = findViewById(R.id.edit_text_confirm_password_user);
         registerButton = findViewById(R.id.button_register_action);
+        registerCompanyLink = findViewById(R.id.text_view_register_company_link);
+        loginLink = findViewById(R.id.text_view_login_link_user);
 
+        // Listener para o botão de registrar
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerUser();
             }
         });
+
+        // Listener para o link "Cadastrar como empresa"
+        registerCompanyLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterUserActivity.this, RegisterCompanyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Listener para o link "Fazer Login"
+        loginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterUserActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void registerUser() {
+        String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
+        String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(RegisterUserActivity.this, "Por favor, preencha e-mail e senha.", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+            Toast.makeText(RegisterUserActivity.this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(RegisterUserActivity.this, "As senhas não coincidem.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -57,10 +89,10 @@ public class RegisterUserActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterUserActivity.this, "Registro bem-sucedido!", Toast.LENGTH_SHORT).show();
-                            // After successful registration, go to the main screen
+                            // Após o registro, redireciona para a tela principal
                             Intent intent = new Intent(RegisterUserActivity.this, MainActivity.class);
                             startActivity(intent);
-                            finish(); // Finish this activity and LoginActivity so user cannot go back
+                            finish(); // Finaliza a atividade para que o usuário não possa voltar
                         } else {
                             Toast.makeText(RegisterUserActivity.this, "Falha no registro: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }

@@ -1,45 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
+    android:background="@color/app_background"
     tools:context=".RegisterUserActivity">
 
     <TextView
+        android:id="@+id/text_view_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Crie sua Conta"
-        android:textSize="24sp"
+        android:layout_marginTop="64dp"
+        android:text="Emprega Fácil"
+        android:textColor="@color/text_light"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- This EditText provides the ID R.id.edit_text_email_register -->
-    <EditText
-        android:id="@+id/edit_text_email_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="E-mail"
-        android:inputType="textEmailAddress"
-        android:layout_marginBottom="12dp"/>
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_title">
 
-    <!-- This EditText provides the ID R.id.edit_text_password_register -->
-    <EditText
-        android:id="@+id/edit_text_password_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Senha"
-        android:inputType="textPassword"
-        android:layout_marginBottom="24dp"/>
+        <LinearLayout
+            android:id="@+id/card_register_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@color/card_background"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-    <!-- This Button provides the ID R.id.button_register_action -->
-    <Button
-        android:id="@+id/button_register_action"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrar"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Cadastro de usuário"
+                android:textColor="@color/text_light"
+                android:textSize="20sp" />
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seu nome"
+                android:textColor="@color/text_light"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edit_text_name_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/text_light"
+                android:hint="Digite seu nome completo"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:textColor="@color/text_light"
+                android:textColorHint="@color/text_hint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E-mail"
+                android:textColor="@color/text_light"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edit_text_email_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/text_light"
+                android:hint="seuemail@exemplo.com"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:textColor="@color/text_light"
+                android:textColorHint="@color/text_hint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Senha"
+                android:textColor="@color/text_light"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edit_text_password_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/text_light"
+                android:hint="Crie uma senha"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:textColor="@color/text_light"
+                android:textColorHint="@color/text_hint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirme sua senha"
+                android:textColor="@color/text_light"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edit_text_confirm_password_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="@color/text_light"
+                android:hint="Repita a senha"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:textColor="@color/text_light"
+                android:textColorHint="@color/text_hint" />
+
+            <Button
+                android:id="@+id/button_register_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background_dark"
+                android:text="Cadastrar"
+                android:textColor="@color/text_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/text_hint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="ou"
+                    android:textColor="@color/text_hint" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/text_hint" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_view_register_company_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp"
+                android:text="Cadastrar como empresa"
+                android:textColor="@color/text_light" />
+
+            <TextView
+                android:id="@+id/text_view_login_link_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp"
+                android:text="Fazer Login"
+                android:textColor="@color/text_light" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
