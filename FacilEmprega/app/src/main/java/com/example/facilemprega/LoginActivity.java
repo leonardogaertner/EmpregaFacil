@@ -25,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView registerLink;
 
+// Dentro de LoginActivity.java
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,25 +43,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ao invés de signInUser(), você pode chamar registerUser() aqui
-                // ou criar um diálogo de escolha, mas por simplicidade, vamos usar o link.
                 signInUser();
             }
         });
 
-        // Listener para o link de Registro (usaremos a mesma Activity para simplificar)
+        // Listener para o link de Registro - ALTERADO
         registerLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Alternamos a função do botão principal para Registro
-                loginButton.setText("Confirmar Registro");
-                loginButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        registerUser();
-                    }
-                });
-                Toast.makeText(LoginActivity.this, "Preencha os dados e clique em 'Confirmar Registro'", Toast.LENGTH_LONG).show();
+                // Inicia a Activity de cadastro de usuário
+                Intent intent = new Intent(LoginActivity.this, RegisterUserActivity.class);
+                startActivity(intent);
             }
         });
     }
