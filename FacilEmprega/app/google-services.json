@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "199186543719",
+    "project_id": "empregafacilmobile",
+    "storage_bucket": "empregafacilmobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199186543719:android:d8bfe6a6ef7e22e68dd0c2",
+        "android_client_info": {
+          "package_name": "com.example.empregafacil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATdyLF1boJ7J4yuOwtnJuQi54kWajpIqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199186543719:android:7f3ed2617e2f47248dd0c2",
+        "android_client_info": {
+          "package_name": "com.example.facilemprega"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATdyLF1boJ7J4yuOwtnJuQi54kWajpIqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
