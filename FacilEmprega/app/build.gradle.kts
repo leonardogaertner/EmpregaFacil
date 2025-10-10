@@ -36,15 +36,19 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.appcompat)
+        implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+
+    // Firebase Dependencies
+    implementation(platform(libs.firebase.bom)) // ADICIONE ESTA LINHA
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore) // ADICIONE ESTA LINHA
+
     implementation(libs.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

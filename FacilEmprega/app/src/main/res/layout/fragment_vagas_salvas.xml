@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/app_background"
-    android:padding="16dp"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.vagas_salvas.VagasSalvasFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_vagas"
+        android:id="@+id/recycler_view_vagas_salvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_vaga"/>
+        android:padding="16dp"
+        tools:listitem="@layout/item_vaga" />
 
 </LinearLayout>
