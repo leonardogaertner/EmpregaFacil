@@ -48,6 +48,7 @@ dependencies {
     implementation(platform(libs.firebase.bom)) // ADICIONE ESTA LINHA
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore) // ADICIONE ESTA LINHA
+    implementation(libs.firebase.storage)
 
     implementation(libs.activity)
     testImplementation(libs.junit)
