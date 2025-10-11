@@ -4,7 +4,8 @@ public class Vaga {
     private String id;
     private String nomeEmpresa;
     private String cargo;
-    private Double salario; // MUDANÇA: de double para Double
+    private Double salario;
+    private String link; // CAMPO ADICIONADO
 
     // Construtor vazio
     public Vaga() {}
@@ -27,11 +28,13 @@ public class Vaga {
         this.cargo = cargo;
     }
 
-    public Double getSalario() { // MUDANÇA: retorna Double
-        // Retorna 0.0 se o salário for nulo para evitar quebrar o app depois
+    public Double getSalario() {
         return salario == null ? 0.0 : salario;
     }
-    public void setSalario(Double salario) { // MUDANÇA: aceita Double
+    public void setSalario(Double salario) {
         this.salario = salario;
     }
+
+    public String getLink() { return link; } // GETTER ADICIONADO
+    public void setLink(String link) { this.link = link; } // SETTER ADICIONADO
 }

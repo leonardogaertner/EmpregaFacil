@@ -2,6 +2,7 @@ package com.example.facilemprega;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -14,6 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.facilemprega.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Inicializa o Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -32,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // Configuração da barra de aplicativos com os destinos de nível superior
-        // Adicionamos a nova tela de vagas salvas aqui.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_vagas_salvas, R.id.navigation_notifications)
                 .build();
@@ -42,24 +41,61 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
-    /**
-     * Checa o estado da autenticação sempre que a Activity for iniciada.
-     */
     @Override
     public void onStart() {
         super.onStart();
-
-        // Obtém o usuário atualmente logado
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        // Se o usuário for nulo (não logado), redireciona para a LoginActivity
         if (currentUser == null) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-
-            // É crucial chamar 'finish()' para que o usuário não possa voltar
-            // para a MainActivity (protegida) ao apertar o botão "Voltar".
-            finish();
+            goToLoginActivity();
+        } else {
+            // VERIFICA O TIPO DE UTILIZADOR E DIRECIONA
+            checkUserRoleAndRedirect(currentUser.getUid());
         }
+    }
+
+    private void checkUserRoleAndRedirect(String uid) {
+        FirebaseFirestore.getInstance().collection("users").document(uid).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String role = documentSnapshot.getString("role");
+                        if ("empresa".equals(role)) {
+                            // Se for empresa, ajusta a UI para a empresa
+                            setupCompanyUI();
+                        } else {
+                            // Se for candidato, ajusta a UI para o candidato
+                            setupCandidateUI();
+                        }
+                    } else {
+                        // Se o perfil não for encontrado, assume o padrão de candidato
+                        setupCandidateUI();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Em caso de falha, também assume o padrão de candidato
+                    setupCandidateUI();
+                });
+    }
+
+    private void setupCompanyUI() {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Esconde o item "Vagas salvas"
+        navView.getMenu().findItem(R.id.navigation_vagas_salvas).setVisible(false);
+        // Renomeia o item "Home" para "Meus anúncios"
+        navView.getMenu().findItem(R.id.navigation_home).setTitle("Meus anúncios");
+    }
+
+    private void setupCandidateUI() {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Garante que o item "Vagas salvas" está visível
+        navView.getMenu().findItem(R.id.navigation_vagas_salvas).setVisible(true);
+        // Garante que o título do item "Home" é "Empregos"
+        navView.getMenu().findItem(R.id.navigation_home).setTitle("Empregos");
+    }
+
+    private void goToLoginActivity() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
