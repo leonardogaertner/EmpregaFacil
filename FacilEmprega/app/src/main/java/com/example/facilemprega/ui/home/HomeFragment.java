@@ -21,13 +21,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
-public class HomeFragment extends Fragment {
+// --- MUDANÇA 1: Implementa a interface ---
+public class HomeFragment extends Fragment implements VagaAdapter.OnSaveClickListener {
 
     private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
     private VagaAdapter vagaAdapter;
     private FloatingActionButton fabAddVaga;
+    // --- MUDANÇA 2: Guarda o estado local dos IDs ---
+    private Set<String> vagasSalvasIds = new HashSet<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,8 +51,9 @@ public class HomeFragment extends Fragment {
     private void setupUI(View root) {
         recyclerView = root.findViewById(R.id.recycler_view_vagas);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Passa listas vazias inicialmente. O adapter será atualizado pelo LiveData.
-        vagaAdapter = new VagaAdapter(new ArrayList<>(), new HashSet<>());
+
+        // --- MUDANÇA 3: Passa 'this' como o listener ---
+        vagaAdapter = new VagaAdapter(new ArrayList<>(), vagasSalvasIds, this);
         recyclerView.setAdapter(vagaAdapter);
 
         fabAddVaga = root.findViewById(R.id.fab_add_vaga);
@@ -58,16 +63,31 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeViewModel() {
+        // --- MUDANÇA 4: Novo observer para os IDs ---
+        homeViewModel.getVagasSalvasIds().observe(getViewLifecycleOwner(), ids -> {
+            this.vagasSalvasIds = ids;
+            vagaAdapter.setVagasSalvasIds(ids);
+        });
+
         homeViewModel.userRole.observe(getViewLifecycleOwner(), role -> {
+            if (role == null) return;
             if ("empresa".equals(role)) {
                 fabAddVaga.setVisibility(View.VISIBLE);
             } else {
                 fabAddVaga.setVisibility(View.GONE);
             }
-            // Depois de saber o perfil, carrega as vagas correspondentes
+
             homeViewModel.getVagasComBaseNoPerfil(role).observe(getViewLifecycleOwner(), vagas -> {
-                vagaAdapter.setVagas(vagas); // Um novo método no adapter para atualizar a lista
+                vagaAdapter.setVagas(vagas);
             });
         });
+    }
+
+    // --- MUDANÇA 5: Implementação do método da interface ---
+    @Override
+    public void onSaveClick(Vaga vaga) {
+        // Verifica se a vaga já está salva e chama o ViewModel
+        boolean isCurrentlySaved = vagasSalvasIds.contains(vaga.getId());
+        homeViewModel.toggleVagaSalva(vaga.getId(), isCurrentlySaved);
     }
 }

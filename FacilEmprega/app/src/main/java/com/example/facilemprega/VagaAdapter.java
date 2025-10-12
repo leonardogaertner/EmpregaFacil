@@ -1,3 +1,4 @@
+// Pacote: com.example.facilemprega
 package com.example.facilemprega;
 
 import android.content.Intent;
@@ -25,10 +26,21 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
     private static final String TAG = "VagaAdapter";
     private List<Vaga> vagas;
     private Set<String> vagasSalvasIds;
+    // --- MUDANÇA 1: Interface de comunicação ---
+    private OnSaveClickListener listener;
 
-    public VagaAdapter(List<Vaga> vagas, Set<String> vagasSalvasIds) {
+    /**
+     * Interface para comunicar eventos de clique no botão 'salvar' de volta para o Fragment.
+     */
+    public interface OnSaveClickListener {
+        void onSaveClick(Vaga vaga);
+    }
+
+    // --- MUDANÇA 2: Construtor atualizado ---
+    public VagaAdapter(List<Vaga> vagas, Set<String> vagasSalvasIds, OnSaveClickListener listener) {
         this.vagas = vagas;
         this.vagasSalvasIds = vagasSalvasIds;
+        this.listener = listener;
     }
 
     @NonNull
@@ -41,6 +53,7 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
     @Override
     public void onBindViewHolder(@NonNull VagaViewHolder holder, int position) {
         Vaga vaga = vagas.get(position);
+        if (vaga == null || vaga.getId() == null) return;
 
         holder.nomeEmpresa.setText(vaga.getNomeEmpresa());
         holder.cargo.setText(vaga.getCargo());
@@ -49,11 +62,10 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
         NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(ptBr);
         holder.salario.setText(formatoMoeda.format(vaga.getSalario()));
 
-        // --- LÓGICA DO BOTÃO "ACESSAR VAGA" ---
         holder.acessarVaga.setOnClickListener(v -> {
+            // ... (código para abrir link continua o mesmo)
             String url = vaga.getLink();
             if (url != null && !url.isEmpty()) {
-                // Adiciona "http://" se o link não tiver um protocolo
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
                     url = "http://" + url;
                 }
@@ -69,10 +81,15 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
             }
         });
 
+        // --- MUDANÇA 3: Lógica do botão de salvar ---
+        final boolean isSaved = vagasSalvasIds.contains(vaga.getId());
+        holder.saveButton.setSelected(isSaved);
 
-        // --- Lógica do botão de salvar (continua igual) ---
-        holder.saveButton.setSelected(vagasSalvasIds.contains(vaga.getId()));
         holder.saveButton.setOnClickListener(v -> {
+            // Notifica o listener (o Fragment) que o botão foi clicado
+            if (listener != null) {
+                listener.onSaveClick(vaga);
+            }
         });
     }
 
@@ -82,6 +99,7 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
     }
 
     public static class VagaViewHolder extends RecyclerView.ViewHolder {
+        // ... (ViewHolder continua o mesmo)
         TextView nomeEmpresa, cargo, salario, acessarVaga;
         ImageView saveButton;
 
@@ -94,15 +112,20 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
             saveButton = itemView.findViewById(R.id.image_view_save_vaga);
         }
     }
+
+    // --- MUDANÇA 4: Método setVagasSalvasIds atualizado ---
     public void setVagas(List<Vaga> novasVagas) {
         this.vagas.clear();
         this.vagas.addAll(novasVagas);
         notifyDataSetChanged();
     }
 
+    /**
+     * Atualiza o conjunto de IDs de vagas salvas e notifica o adapter para
+     * redesenhar os itens, atualizando o estado visual dos botões de salvar.
+     */
     public void setVagasSalvasIds(Set<String> ids) {
-        this.vagasSalvasIds.clear();
-        this.vagasSalvasIds.addAll(ids);
+        this.vagasSalvasIds = ids;
         notifyDataSetChanged();
     }
 }
