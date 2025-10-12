@@ -2,7 +2,6 @@ package com.example.facilemprega;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.facilemprega.model.Vaga;
 
 import java.text.NumberFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder> {
@@ -80,7 +73,6 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
         // --- Lógica do botão de salvar (continua igual) ---
         holder.saveButton.setSelected(vagasSalvasIds.contains(vaga.getId()));
         holder.saveButton.setOnClickListener(v -> {
-            // ... (seu código de salvar vaga existente)
         });
     }
 
@@ -101,5 +93,16 @@ public class VagaAdapter extends RecyclerView.Adapter<VagaAdapter.VagaViewHolder
             acessarVaga = itemView.findViewById(R.id.text_view_acessar_vaga);
             saveButton = itemView.findViewById(R.id.image_view_save_vaga);
         }
+    }
+    public void setVagas(List<Vaga> novasVagas) {
+        this.vagas.clear();
+        this.vagas.addAll(novasVagas);
+        notifyDataSetChanged();
+    }
+
+    public void setVagasSalvasIds(Set<String> ids) {
+        this.vagasSalvasIds.clear();
+        this.vagasSalvasIds.addAll(ids);
+        notifyDataSetChanged();
     }
 }

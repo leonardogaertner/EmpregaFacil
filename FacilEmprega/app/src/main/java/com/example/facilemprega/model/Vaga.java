@@ -1,4 +1,4 @@
-package com.example.facilemprega;
+package com.example.facilemprega.model;
 
 public class Vaga {
     private String id;
