@@ -1,46 +1,41 @@
-/**
- * Importa os módulos necessários do Firebase Functions e Admin SDK.
- */
-const functions = require("firebase-functions");
+// functions/index.js (Sintaxe V2)
+
+// Importa os módulos necessários
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
 
-// Inicializa o Admin SDK para que o código possa interagir com o Firebase.
 admin.initializeApp();
 
-/**
- * Cloud Function acionada quando um novo documento é criado na coleção "vagas".
- * Envia uma notificação a todos os dispositivos inscritos no tópico "new_vaga_alerts".
- */
-exports.notifyNewVaga = functions.firestore
-    .document("vagas/{vagaId}")
-    .onCreate(async (snapshot, context) => {
+exports.notifyNewVaga = onDocumentCreated("vagas/{vagaId}", async (event) => {
 
-        // Obtém os dados da nova vaga criada
-        const novaVaga = snapshot.data();
+    // O evento V2 tem a propriedade data que contém o snapshot
+    const snapshot = event.data.after;
 
-        // Constrói o payload da mensagem FCM
-        const payload = {
-            notification: {
-                // Conteúdo exibido na notificação do Android
-                title: `Nova Vaga: ${novaVaga.cargo || "Oportunidade"}`,
-                body: `${novaVaga.nomeEmpresa || "Uma Empresa"} publicou uma nova vaga! Confira.`,
-            },
-            data: {
-                // Dados que podem ser lidos pelo seu app (payload de dados)
-                vagaId: context.params.vagaId,
-                action: "open_vaga_list",
-            },
-        };
+    // Verifica se o documento existe
+    if (!snapshot) {
+        return;
+    }
 
-        const topic = "new_vaga_alerts";
+    const novaVaga = snapshot.data();
+    const vagaId = event.params.vagaId; // Obtém o vagaId dos parâmetros
 
-        try {
-            // Envia a mensagem para o tópico
-            const response = await admin.messaging().sendToTopic(topic, payload);
-            console.log("Notificação enviada com sucesso:", response);
-            return response;
-        } catch (error) {
-            console.error("Erro ao enviar notificação:", error);
-            return null; // Retorna null em caso de erro
-        }
-    });
+    const payload = {
+        notification: {
+            title: `Nova Vaga: ${novaVaga.cargo || "Oportunidade"}`,
+            body: `${novaVaga.nomeEmpresa || "Uma Empresa"} publicou uma nova vaga! Confira.`,
+        },
+        data: {
+            vagaId: vagaId,
+            action: "open_vaga_list",
+        },
+    };
+
+    const topic = "new_vaga_alerts";
+
+    try {
+        await admin.messaging().sendToTopic(topic, payload);
+        console.log("Notificação V2 enviada com sucesso.");
+    } catch (error) {
+        console.error("Erro ao enviar notificação V2:", error);
+    }
+});
