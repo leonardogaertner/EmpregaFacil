@@ -2,6 +2,7 @@ package com.example.facilemprega;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.facilemprega.ui.auth.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,6 +17,7 @@ import com.example.facilemprega.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             goToLoginActivity();
         } else {
+            subscribeToVagasTopic();
+
             // VERIFICA O TIPO DE UTILIZADOR E DIRECIONA
             checkUserRoleAndRedirect(currentUser.getUid());
         }
@@ -97,5 +101,13 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void subscribeToVagasTopic() {
+        FirebaseMessaging.getInstance().subscribeToTopic("new_vaga_alerts")
+                .addOnCompleteListener(task -> {
+                    String msg = task.isSuccessful() ? "Inscrito no tópico de vagas com sucesso." : "Falha na inscrição do tópico de vagas.";
+                    Log.d("FCM", msg);
+                });
     }
 }
